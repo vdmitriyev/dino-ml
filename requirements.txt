@@ -1,3 +1,5 @@
 numpy
-pyuserinput
+# 2 times depracated
+#pyuserinput 
+pynput
 pillow
