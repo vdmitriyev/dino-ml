@@ -6,9 +6,9 @@ import uuid
 dino_color = (83, 83, 83, 255)
 
 def screenshot(x, y, w, h, f_name = None):
-    #f_name = 'tmp-{0}.png'.format(datetime.utcnow().isoformat('-').replace(':', '-'))
 
     if f_name is None:
+        #f_name = 'tmp-{0}.png'.format(datetime.utcnow().isoformat('-').replace(':', '-'))
         f_name = 'tmp.png'
 
     os.system("screenshot.exe -rc {0} {1} {2} {3} -o {4}".format(x, y, w, h, f_name))
@@ -61,7 +61,8 @@ class Scanner:
 
     def find_next_obstacle(self):
         #image = screenshot(210, 100, 500, 155, f_name='next_obstacle.png')
-        image = screenshot(110, 280, 1500, 700, f_name='next_obstacle.png')
+        #image = screenshot(110, 280, 1500, 700, f_name='next_obstacle.png')
+        image = screenshot(80, 580, 208+100, 682, f_name='next_obstacle.png')
         dist = self.__next_obstacle_dist(image)
 
         print('dist: {0}'.format(dist))
@@ -83,25 +84,33 @@ class Scanner:
     def __next_obstacle_dist(self, image):
 
         s = 0
+        #MAX_PIXELS_DINO = 7093+10 # see the test.py
+        MAX_PIXELS_DINO = 6545 # see the test.py
+
         MAX_WIDTH = image.width
         MAX_HEIGHT = image.height
         #for x in range(210, 250, 1):
-        for x in range(95, 125, 1):
-            for y in range(70, 100, 1):
+        #for x in range(95, 125, 1):
+         #   for y in range(70, 100, 1):
+        for x in range(MAX_WIDTH):
+            for y in range(MAX_HEIGHT):
                 color = image.getpixel((x, y))
                 if is_dino_color(color):
                     s += 1
 
-        print (s)
+        print ('Total pixels found: {0}'.format(s))
 
-        if s > 650:
+        if s > MAX_PIXELS_DINO:
             print('Game over!')
+            os.rename('next_obstacle.png', 'next_obstacle-go-{0}.png'.format(datetime.utcnow().isoformat('-').replace(':', '-')))
             raise Exception('Game over!')
 
-        for x in range(0, MAX_WIDTH, 5):
-            for y in range(80, 115, 5):
+        for x in range(MAX_WIDTH-99, MAX_WIDTH, 1):
+            for y in range(MAX_HEIGHT-3):
                 color = image.getpixel((x, y))
+                #print (x, y, color)
                 if is_dino_color(color):
+                    print ('Next pixel after dino found: {0}'.format(x))
                     return x
 
         return 1000000

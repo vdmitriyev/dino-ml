@@ -2,7 +2,8 @@ import numpy as np
 
 class Network:
 
-    def __init__(self):
+    def __init__(self, name=None):
+        self.name = name
         self.input_size = 3
         self.hidden_size = 4
         self.output_size = 1

@@ -11,7 +11,7 @@ import copy
 class Generation:
 
     def __init__(self):
-        self.__genomes = [Network() for i in range(12)]
+        self.__genomes = [Network(name='ANNID#{0}'.format(str(i))) for i in range(12)]
         self.__best_genomes = []
 
     def execute(self):
@@ -20,19 +20,25 @@ class Generation:
         scanner = Scanner()
         scanner.find_game()
         for genome in self.__genomes:
+            print ('\n' + '-'*25 + '\n')
+            print ('Try network: {0}'.format(genome.name))
             scanner.reset()
-            keyboard.press('r')
-            keyboard.press('r')
+            #keyboard.press('r')
+            #keyboard.press('r')
+            print('Restart the game')
             sleep(1)
             keyboard.press(Key.space)
+            keyboard.release(Key.space)
             while True:
                 try:
                     print('find_next_obstacle')
                     obs = scanner.find_next_obstacle()
                     inputs = [obs['distance'] / 1000, obs['length'], obs['speed'] / 10]
+                    print (inputs)
                     outputs = genome.forward(np.array(inputs, dtype=float))
                     if outputs[0] > 0.55:
                         keyboard.press(Key.space)
+                        keyboard.release(Key.space)
                 except Exception as ex:
                     print('Exception: {0}'.format(str(ex)))
                     break
